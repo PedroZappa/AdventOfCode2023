@@ -25,7 +25,8 @@ int		main(void)
 	int			fd;
 	int			i;
 
-	fd = open("calibration-doc.txt", O_RDONLY);
+	// fd = open("files/calibration-doc.txt", O_RDONLY);
+	fd = open("files/test.txt", O_RDONLY);
 	if (fd == -1)
 	{
 		perror("open() failed");
@@ -36,7 +37,8 @@ int		main(void)
 	while (get_next_line(fd) != NULL)
 		++n_lines;	
 	close(fd);
-	fd = open("calibration-doc.txt", O_RDONLY);
+	// fd = open("files/calibration-doc.txt", O_RDONLY);
+	fd = open("files/test.txt", O_RDONLY);
 	if (fd == -1)
 	{
 		perror("open() failed");
