@@ -13,7 +13,7 @@ typedef struct s_calib_val
 t_calib_val		get_calib_val(char *line);
 int				is_strnum(char *line);
 int				strtoi(char *str);
-int		numstrlen(int num);
+int				numstrlen(int num);
 
 
 int		main(void)
