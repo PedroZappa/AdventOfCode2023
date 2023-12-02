@@ -13,6 +13,7 @@ typedef struct s_calib_val
 t_calib_val		get_calib_val(char *line);
 int				is_strnum(char *line);
 int				strtoi(char *str);
+int		numstrlen(int num);
 
 
 int		main(void)
@@ -44,8 +45,10 @@ int		main(void)
 		perror("open() failed");
 		return 1;
 	}
+
 	// Extract Values
 	i = 0;
+	read_vals = NULL;
 	vals_list = malloc(sizeof(int) * n_lines);
 	if (!vals_list)
 		return 1;
@@ -56,10 +59,12 @@ int		main(void)
 			return 1;
 		*read_vals = get_calib_val(line);
 		vals_list[i] = read_vals->calib_val;
+		free(read_vals);
 		free(line);
 		++i;
 	}
 	close(fd);
+
 	// Sum values
 	sum = 0;
 	i = -1;
@@ -85,14 +90,21 @@ t_calib_val		get_calib_val(char *line)
 			if (calib_val.first_dig == -1)
 				calib_val.first_dig = *line - '0';
 			calib_val.last_dig = *line - '0';
+			++line;
 		}
-		if ((*line >= 'a' && *line <= 'z') || (*line >= 'A' && *line <= 'Z'))
+		else if ((*line >= 'a' && *line <= 'z') || (*line >= 'A' && *line <= 'Z'))
 		{
 			if (calib_val.first_dig == -1)
+			{
 				calib_val.first_dig = is_strnum(line);
-			calib_val.last_dig = is_strnum(line);
+				line += numstrlen(calib_val.first_dig);
+			}	
+			else
+			{
+				calib_val.last_dig = is_strnum(line);
+				line += numstrlen(calib_val.last_dig);
+			}
 		}
-		++line;
 	}
 	calib_val.calib_val = (calib_val.first_dig * 10) + calib_val.last_dig;
 	return (calib_val);
@@ -145,4 +157,16 @@ int		strtoi(char *str)
     else if(strcmp(str, "nine") == 0) 
 		return 9;
     else return -1;
+}
+
+int		numstrlen(int num)
+{
+	int		len;
+	char	*str;
+	char *numstrs[] = {"", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
+	
+	len = 0;
+	str = numstrs[num];
+	len = strlen(str);
+	return (len);
 }

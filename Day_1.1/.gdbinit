@@ -1,19 +1,16 @@
 define main
-	display read_vals
+	display /d *read_vals
 	display line
 	display n_lines
 	display vals_list
-	display vals_list[i]
+	display /d vals_list[i]
 	display fd
 	display i
 end
 
 define gcv
-	display calib_val
-	display /d calib_val->first_dig
-	display /d calib_val->last_dig
-	display /d calib_val->calib_val
-
+	display /d calib_val
+	display line
 end
 
 define strnum
@@ -33,3 +30,4 @@ set logging on
 fs cmd
 break 50
 run
+main
