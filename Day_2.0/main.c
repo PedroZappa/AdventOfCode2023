@@ -86,6 +86,9 @@ void	parse_game(char *line, t_game **games_list)
 	curr_game->rounds = NULL;
 	curr_game->next = NULL;
 
+	/* Init new round */
+	curr_round = NULL;
+
 	/* Loop through the line and parse stats */
 	i = -1;
 	id = 0;
@@ -117,7 +120,7 @@ void	parse_game(char *line, t_game **games_list)
 				j = 0;
 				n_cubes = 0;
 				// Parse color to set n_cubes to
-				while ((line[i + j] != ',') && (line[i + j] != '\0'))
+				while ((line[i + j] != ',') && (line[i + j] != ';') && (line[i + j] != '\0'))
 				{
 					// Get first n_cubes
 					if (isdigit(line[i + j]) && (n_cubes == 0))
@@ -143,7 +146,7 @@ void	parse_game(char *line, t_game **games_list)
 					}
 					++j;
 				}
-				i += j;
+				i += j - 1;
 			}
 			++i;
 		}

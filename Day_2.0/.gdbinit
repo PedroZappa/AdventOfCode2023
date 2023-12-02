@@ -21,9 +21,8 @@ define prs
 	display /c line[i + j]
 	display *curr_game
 	display *curr_game->rounds
-	display *curr_game->rounds->rounds
-	display *curr_game->rounds->rounds->rounds
 	display *last_game
+	display *curr_round
 	display line_cp
 	display /d id
 	display /d n_cubes
@@ -35,7 +34,7 @@ end
 ### gdb go!
 set trace-commands on
 set logging on
-break 160
+break 154
 run
 # main
 fs cmd
