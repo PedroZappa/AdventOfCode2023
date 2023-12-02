@@ -9,6 +9,8 @@ define main
 end
 
 define prs
+	display curr_game
+	display last_game
 	display str_color
 	display line_cp
 	display /d id
