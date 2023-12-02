@@ -72,6 +72,8 @@ int		main(void)
 		sum += vals_list[i];
 	printf("The sum of all calibration values is: \n");
 	printf("\t%d\n", sum);
+	free(vals_list);
+	return 0;
 
 }
 
@@ -79,10 +81,12 @@ int		main(void)
 t_calib_val		get_calib_val(char *line)
 {
 	t_calib_val	calib_val;
+	int			len;
 
 	calib_val.first_dig = -1;
 	calib_val.last_dig = -1;
 	calib_val.calib_val = 0;
+	len = 0;
 	while (*line) 
 	{
 		if (*line >= '0' && *line <= '9')
@@ -104,6 +108,8 @@ t_calib_val		get_calib_val(char *line)
 				calib_val.last_dig = is_strnum(line);
 				line += numstrlen(calib_val.last_dig);
 			}
+			if (*line == '\n')
+				++line;
 		}
 	}
 	calib_val.calib_val = (calib_val.first_dig * 10) + calib_val.last_dig;
@@ -113,25 +119,42 @@ t_calib_val		get_calib_val(char *line)
 int	is_strnum(char *line)
 {
 	int		n_strs;
+	int		slen;
+	int		num;
 	int		i;
-	char	*pos;
 	char	*numstr[] = {	
-		"one", "two", "three", "four", "five", "six", "seven", "eight", "nine" 
+		"", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" 
 	};
 	
 	n_strs = sizeof(numstr) / sizeof(numstr[0]);
-	i = 0;
+	i = 1;
+	num = 0;
+	slen = 0;
 	while (i < n_strs)
 	{
-		pos = line;
-		while ((pos = strstr(pos, numstr[i])) != NULL)
+		slen = strlen(numstr[i]);
+		if ((num = strncmp(line, numstr[i], slen)) == 0)
 		{
 			return (strtoi(numstr[i]));
-			++pos;
 		}
 		++i;
 	}
+	/* If no spelled out digit was found get lenght of chars before 
+	 * next digit or spelled out digit */
 	return -1;
+}
+
+int		numstrlen(int num)
+{
+	int		len;
+	char	*numstr;
+	char *numstrs[] = {"", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
+	
+	len = 0;
+	numstr = NULL;
+	numstr = numstrs[num];
+	len = strlen(numstr);
+	return (len);
 }
 
 int		strtoi(char *str)
@@ -157,16 +180,4 @@ int		strtoi(char *str)
     else if(strcmp(str, "nine") == 0) 
 		return 9;
     else return -1;
-}
-
-int		numstrlen(int num)
-{
-	int		len;
-	char	*str;
-	char *numstrs[] = {"", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
-	
-	len = 0;
-	str = numstrs[num];
-	len = strlen(str);
-	return (len);
 }
