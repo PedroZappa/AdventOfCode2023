@@ -1,7 +1,8 @@
 #include "day2.h"
 
 void	parse_game(char *line, t_game **game);
-t_game	*ft_getlastnode(t_game *games);
+t_game	*getlastgame(t_game *games_list);
+t_round	*getlastround(t_round *rounds_list);
 
 int main(void)
 {
@@ -11,6 +12,7 @@ int main(void)
 	char	*line;
 	t_game	*games_list;
 
+	games_list = NULL;
 	/* Open file for counting number of lines */
 	fd = open("files/test.txt", O_RDONLY);
 	if (fd == -1)
@@ -26,13 +28,6 @@ int main(void)
 	fd = open("files/test.txt", O_RDONLY);
 	if (fd == -1)
 		return (1);
-	/* alloc memory & init linked list */
-	games_list = malloc(sizeof(t_game));
-	if (!games_list)
-		return (1);
-	games_list->id = 0;
-	games_list->rounds = NULL;
-	games_list->next = NULL;
 	/* Parse the file */
 	while ((line = get_next_line(fd)) != NULL)
 	{
@@ -71,11 +66,12 @@ int main(void)
 
 /* Validate and store a curr_game's stats in a node
  * */
-void	parse_game(char *line, t_game **games)
+void	parse_game(char *line, t_game **games_list)
 {
 	t_game	*curr_game;
 	t_game	*last_game;
-	char	*str_color;
+	t_round	*curr_round;
+	t_round	*last_round;
 	char	*line_cp;
 	int		id;
 	int		n_cubes;
@@ -91,51 +87,59 @@ void	parse_game(char *line, t_game **games)
 	curr_game->next = NULL;
 
 	/* Loop through the line and parse stats */
-	i = 0;
+	i = -1;
 	id = 0;
-	while (line[i])
+	while (line[++i])
 	{
-		// Get ID
-		if (isdigit(line[i]) && (id == 0))
-			curr_game->id = id;
-		// Get 1st round (round ends at semicolon)
+		// Get each round (round ends at semicolon)
 		while (line[i] && (line[i] != ';'))
 		{
+			// Get ID
+			if (isdigit(line[i]) && (id == 0))
+			{
+				id = atoi(line + i);
+				curr_game->id = id;
+				++i;
+			}
 			if (isdigit(line[i]))
 			{
 				/* Alloc and init round */
-				if (!curr_game->rounds)
+				if (!curr_round)
 				{
-					curr_game->rounds = malloc(sizeof(t_round));
-					if (!curr_game->rounds)
+					curr_round = malloc(sizeof(t_round));
+					if (!curr_round)
 						return ;
-					curr_game->rounds->red = 0;
-					curr_game->rounds->green = 0;
-					curr_game->rounds->blue = 0;
-					curr_game->rounds->next = NULL;
+					curr_round->red = 0;
+					curr_round->green = 0;
+					curr_round->blue = 0;
+					curr_round->next = NULL;
 				}
 				j = 0;
 				n_cubes = 0;
 				// Parse color to set n_cubes to
-				while ((line[i + j] != ',') && (line[i + j] != ';') && (line[i + j] != '\0'))
+				while ((line[i + j] != ',') && (line[i + j] != '\0'))
 				{
 					// Get first n_cubes
 					if (isdigit(line[i + j]) && (n_cubes == 0))
+						n_cubes = atoi(line + i + j);
+					if (isalpha(line[i + j]) && (n_cubes != 0))
 					{
-						str_color = strndup(line + i, 5);
-						n_cubes = atoi(str_color);
-						free(str_color);
-					}
-					if (isalpha(line[i + j]))
-					{
-						n_cubes = 0;
 						line_cp = line + i + j;
 						if (strncmp(line_cp, "red", (long unsigned)3) == 0)
-							curr_game->rounds->red = n_cubes;
+						{
+							curr_round->red = n_cubes;
+							break ;
+						}
 						else if (strncmp(line_cp, "green", (long unsigned)5) == 0)
-							curr_game->rounds->green = n_cubes;
+						{
+							curr_round->green = n_cubes;
+							break ;
+						}
 						else if (strncmp(line_cp, "blue", (long unsigned)4) == 0)
-							curr_game->rounds->blue = n_cubes;
+						{
+							curr_round->blue = n_cubes;
+							break ;
+						}
 					}
 					++j;
 				}
@@ -143,23 +147,36 @@ void	parse_game(char *line, t_game **games)
 			}
 			++i;
 		}
+		/* Get last round */
+		last_round = getlastround(curr_round);
+		last_round->next = curr_round;
+		curr_round = NULL;
 	}
 
 	/* Add node to linked list */
-	if (!(*games))
+	if (!(*games_list))
 	{
-		*games = curr_game;
+		*games_list = curr_game;
 		return ;
 	}
-	last_game = ft_getlastnode(*games);
+	last_game = getlastgame(*games_list);
 	last_game->next = curr_game;
 }
 
-/* Returns pointer to last node in 'games' list
+/* Returns pointer to last node in 'games_list' list
  * */
-t_game	*ft_getlastnode(t_game *games)
+t_game	*getlastgame(t_game *games_list)
 {
-	while (games && games->next)
-		games = games->next;
-	return (games);
+	while (games_list && games_list->next)
+		games_list = games_list->next;
+	return (games_list);
+}
+
+/* Returns pointer to last round in game 
+ * */
+t_round	*getlastround(t_round *rounds_list)
+{
+	while (rounds_list && rounds_list->next)
+		rounds_list = rounds_list->next;
+	return (rounds_list);
 }

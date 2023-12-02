@@ -11,18 +11,18 @@
 /* Structs to store game data */
 typedef struct s_round
 {
-	int		blue;
-	int		red;
-	int		green;
-	struct t_round	*next;
-}		t_round;
+	int				red;
+	int				green;
+	int				blue;
+	struct s_round	*next;
+}	t_round;
 
 typedef struct s_game
 {
-	int		id;
+	int				id;
 	struct s_round	*rounds;
 	struct s_game	*next;
-}		t_game;
+}	t_game;
 
 
 #endif
