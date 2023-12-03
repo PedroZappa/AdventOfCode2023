@@ -1,20 +1,9 @@
-#include <stdio.h>
-#include <fcntl.h>			// open()
-#include <string.h>			// strstr()
-#include "get_next_line.h"
-
-typedef struct s_calib_val
-{
-	int first_dig;
-	int last_dig;
-	int calib_val;
-}		t_calib_val;
+#include "day1.h"
 
 t_calib_val		get_calib_val(char *line);
 int				is_strnum(char *line);
-int				strtoi(char *str);
 int				numstrlen(int num);
-
+int				strtoi(char *str);
 
 int		main(void)
 {
@@ -81,12 +70,12 @@ int		main(void)
 t_calib_val		get_calib_val(char *line)
 {
 	t_calib_val	calib_val;
-	int			len;
+	// int			len;
 
 	calib_val.first_dig = -1;
 	calib_val.last_dig = -1;
 	calib_val.calib_val = 0;
-	len = 0;
+	// len = 0;
 	while (*line) 
 	{
 		if (*line >= '0' && *line <= '9')
