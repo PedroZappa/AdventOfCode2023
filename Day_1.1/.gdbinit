@@ -25,6 +25,23 @@ define strnum
 	display /d skip
 end
 
+define getskip
+	display line
+	display numstr[i]
+	display /d n_strs
+	display /d slen
+	display /d num
+	display /d i
+	display /d skip
+end
+
+define numstrlen
+	display num
+	display len
+	display *numstr
+	display numstrs[num] 
+end
+
 define strtoi
 	display str
 end
@@ -33,7 +50,7 @@ end
 set trace-commands on
 set logging on
 fs cmd
-break 49
+break 50
 # break is_strnum
 run
 main

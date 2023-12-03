@@ -1,7 +1,9 @@
 #include "day1.h"
 
 t_calib_val		get_calib_val(char *line);
+int				getnum(char *line, t_calib_val *calib_val);
 int				is_strnum(char *line);
+int				getskip(char *line);
 int				numstrlen(int num);
 int				strtoi(char *str);
 
@@ -22,7 +24,7 @@ int		main(void)
 		perror("open() failed");
 		return 1;
 	}
-	// Count number of lines
+	// Count number of lines to get lenght of `vals_list`
 	n_lines = 0;
 	while (get_next_line(fd) != NULL)
 		++n_lines;	
@@ -45,7 +47,7 @@ int		main(void)
 	{
 		read_vals = malloc(sizeof(t_calib_val));
 		if (!read_vals)
-		return 1;
+			return 1;
 		*read_vals = get_calib_val(line);
 		vals_list[i] = read_vals->calib_val;
 		free(read_vals);
@@ -62,55 +64,100 @@ int		main(void)
 	printf("The sum of all calibration values is: \n");
 	printf("\t%d\n", sum);
 	free(vals_list);
-	return 0;
 
+	return 0;
 }
 
-
+/* Extract Calibration Values 
+ * */
 t_calib_val		get_calib_val(char *line)
 {
-	t_calib_val	calib_val;
-	// int			len;
+	t_calib_val	*calib_val;
 
-	calib_val.first_dig = -1;
-	calib_val.last_dig = -1;
-	calib_val.calib_val = 0;
-	// len = 0;
+	calib_val = malloc(sizeof(t_calib_val));
+	calib_val->first_dig = -1;
+	calib_val->last_dig = -1;
+	calib_val->calib_val = 0;
 	while (*line) 
 	{
 		if (*line >= '0' && *line <= '9')
 		{
-			if (calib_val.first_dig == -1)
-				calib_val.first_dig = *line - '0';
-			calib_val.last_dig = *line - '0';
+			if (calib_val->first_dig == -1)
+				calib_val->first_dig = *line - '0';
+			calib_val->last_dig = *line - '0';
 			++line;
 		}
 		else if ((*line >= 'a' && *line <= 'z') || (*line >= 'A' && *line <= 'Z'))
-		{
-			if (calib_val.first_dig == -1)
-			{
-				calib_val.first_dig = is_strnum(line);
-				line += numstrlen(calib_val.first_dig);
-			}	
-			else if (calib_val.last_dig == -1)
-			{
-				calib_val.last_dig = is_strnum(line);
-				line += numstrlen(calib_val.last_dig);
-			}
-			else
-			{
-				calib_val.last_dig = is_strnum(line);
-				line += numstrlen(calib_val.last_dig) - 1;
-			}
-			if (*line == '\n')
-			++line;
-		}
+			line += getnum(line, calib_val);	
 	}
-	calib_val.calib_val = (calib_val.first_dig * 10) + calib_val.last_dig;
-	return (calib_val);
+	calib_val->calib_val = (calib_val->first_dig * 10) + calib_val->last_dig;
+	return (*calib_val);
 }
 
+int	getnum(char *line, t_calib_val *calib_val)
+{
+	int			got_first;
+	int			got_last;
+
+	got_first = 0;
+	got_last = 0;
+
+	if (got_first == 0)
+	{
+		calib_val->first_dig = is_strnum(line);
+		if (calib_val->first_dig == 0)
+			return (getskip(line));	
+		else
+		{
+			got_first = 1;
+			return (numstrlen(calib_val->first_dig));
+		}
+	}
+	else if (got_last == 0)
+	{
+		calib_val->last_dig = is_strnum(line);
+		if (calib_val->last_dig == 0)
+			line += getskip(line);
+		else
+		{
+			got_last = 1;
+			line += numstrlen(calib_val->last_dig);
+		}
+	}
+	else
+		++line;
+	if (*line == '\n')
+		++line;
+	return (0);
+}
+
+/* Look for spelled out digit 
+ * */
 int	is_strnum(char *line)
+{
+	int		n_strs;
+	int		slen;
+	int		num;
+	int		i;
+	char	*numstr[] = {	
+		"", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" 
+	};
+
+	i = 1;
+	num = 0;
+	slen = 0;
+	n_strs = sizeof(numstr) / sizeof(numstr[0]);
+	while (i < n_strs)
+	{
+		slen = strlen(numstr[i]);
+		if ((num = strncmp(line, numstr[i], slen)) == 0)
+			return (strtoi(numstr[i]));		/* Returns found digit */
+		++i;
+	}
+	return (0);
+}
+
+int	getskip(char *line)
 {
 	int		n_strs;
 	int		slen;
@@ -120,39 +167,28 @@ int	is_strnum(char *line)
 	char	*numstr[] = {	
 		"", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" 
 	};
-
-	n_strs = sizeof(numstr) / sizeof(numstr[0]);
-	i = 1;
-	num = 0;
-	slen = 0;
-	while (i < n_strs)
-	{
-		slen = strlen(numstr[i]);
-		if ((num = strncmp(line, numstr[i], slen)) == 0)
-			return (strtoi(numstr[i]));
-		++i;
-	}
 	/* If no spelled out digit was found get lenght of chars before 
 	 * next digit or spelled out digit */
 	i = 1;
 	skip = 0;
 	slen = strlen(numstr[i]);
+	n_strs = sizeof(numstr) / sizeof(numstr[0]);
 	while (i < n_strs)
 	{
-		while ((num = strncmp(line, numstr[i], slen)) != 0)
+		while (*line)
 		{
-			++skip;
-			break ;
-
+			if ((num = strncmp(line, numstr[i], slen)) != 0)
+				++skip;
+			if (num == 0)
+				return (skip);
+			++line;
 		}
-		if (num == 0)
-			return (skip);
+		line -= skip;
+		skip = 0;
 		++i;
-		++line;
 		slen = strlen(numstr[i]);
-
 	}
-	return (skip);
+	return (0);
 }
 
 int		numstrlen(int num)
