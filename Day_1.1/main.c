@@ -45,7 +45,7 @@ int		main(void)
 	{
 		read_vals = malloc(sizeof(t_calib_val));
 		if (!read_vals)
-			return 1;
+		return 1;
 		*read_vals = get_calib_val(line);
 		vals_list[i] = read_vals->calib_val;
 		free(read_vals);
@@ -92,13 +92,18 @@ t_calib_val		get_calib_val(char *line)
 				calib_val.first_dig = is_strnum(line);
 				line += numstrlen(calib_val.first_dig);
 			}	
-			else
+			else if (calib_val.last_dig == -1)
 			{
 				calib_val.last_dig = is_strnum(line);
 				line += numstrlen(calib_val.last_dig);
 			}
+			else
+			{
+				calib_val.last_dig = is_strnum(line);
+				line += numstrlen(calib_val.last_dig) - 1;
+			}
 			if (*line == '\n')
-				++line;
+			++line;
 		}
 	}
 	calib_val.calib_val = (calib_val.first_dig * 10) + calib_val.last_dig;
@@ -111,10 +116,11 @@ int	is_strnum(char *line)
 	int		slen;
 	int		num;
 	int		i;
+	int		skip;
 	char	*numstr[] = {	
 		"", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" 
 	};
-	
+
 	n_strs = sizeof(numstr) / sizeof(numstr[0]);
 	i = 1;
 	num = 0;
@@ -123,14 +129,30 @@ int	is_strnum(char *line)
 	{
 		slen = strlen(numstr[i]);
 		if ((num = strncmp(line, numstr[i], slen)) == 0)
-		{
 			return (strtoi(numstr[i]));
-		}
 		++i;
 	}
 	/* If no spelled out digit was found get lenght of chars before 
 	 * next digit or spelled out digit */
-	return -1;
+	i = 1;
+	skip = 0;
+	slen = strlen(numstr[i]);
+	while (i < n_strs)
+	{
+		while ((num = strncmp(line, numstr[i], slen)) != 0)
+		{
+			++skip;
+			break ;
+
+		}
+		if (num == 0)
+			return (skip);
+		++i;
+		++line;
+		slen = strlen(numstr[i]);
+
+	}
+	return (skip);
 }
 
 int		numstrlen(int num)
@@ -138,7 +160,7 @@ int		numstrlen(int num)
 	int		len;
 	char	*numstr;
 	char *numstrs[] = {"", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
-	
+
 	len = 0;
 	numstr = NULL;
 	numstr = numstrs[num];
@@ -150,23 +172,23 @@ int		strtoi(char *str)
 {
 	if(strcmp(str, "zero") == 0) 
 		return 0;
-    else if(strcmp(str, "one") == 0) 
+	else if(strcmp(str, "one") == 0) 
 		return 1;
-    else if(strcmp(str, "two") == 0) 
+	else if(strcmp(str, "two") == 0) 
 		return 2;
-    else if(strcmp(str, "three") == 0) 
+	else if(strcmp(str, "three") == 0) 
 		return 3;
-    else if(strcmp(str, "four") == 0) 
+	else if(strcmp(str, "four") == 0) 
 		return 4;
-    else if(strcmp(str, "five") == 0) 
+	else if(strcmp(str, "five") == 0) 
 		return 5;
-    else if(strcmp(str, "six") == 0) 
+	else if(strcmp(str, "six") == 0) 
 		return 6;
-    else if(strcmp(str, "seven") == 0) 
+	else if(strcmp(str, "seven") == 0) 
 		return 7;
-    else if(strcmp(str, "eight") == 0) 
+	else if(strcmp(str, "eight") == 0) 
 		return 8;
-    else if(strcmp(str, "nine") == 0) 
+	else if(strcmp(str, "nine") == 0) 
 		return 9;
-    else return -1;
+	else return -1;
 }

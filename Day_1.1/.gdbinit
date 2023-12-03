@@ -3,6 +3,7 @@ define main
 	display line
 	display n_lines
 	display /d vals_list
+	display /d *vals_list
 	display /d vals_list[i]
 	display fd
 	display /d i
@@ -11,8 +12,7 @@ end
 define gcv
 	display /d calib_val
 	display line
-	display *line
-	display len
+	display /c *line
 end
 
 define strnum
@@ -22,6 +22,7 @@ define strnum
 	display numstr[i]
 	display /d i
 	display /d num
+	display /d skip
 end
 
 define strtoi
@@ -32,8 +33,8 @@ end
 set trace-commands on
 set logging on
 fs cmd
-# break 50
-break is_strnum
+break 49
+# break is_strnum
 run
-# main
-strnum
+main
+# strnum
