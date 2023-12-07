@@ -1,5 +1,5 @@
-#ifndef DAY_4
-# define DAY_4
+#ifndef DAY4_H
+# define DAY4_H
 
 # include <stdio.h>
 # include <fcntl.h>			// open()
