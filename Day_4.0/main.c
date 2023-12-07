@@ -12,7 +12,7 @@ int main(void)
 	char	*str = "42zed";
 
 	atoied = ft_atoi(str);
-	printf("Atoied : %i\n", atoied);
+	ft_printf("Atoied : %i\n", atoied);
 
 	fd = open("files/test.txt", O_RDONLY);
 	if (fd == -1)
@@ -20,7 +20,7 @@ int main(void)
 
 	while ((line = get_next_line(fd)) != NULL)
 	{
-		printf("%s\n", line);
+		ft_printf("%s\n", line);
 		free(line);
 	}	
 	close(fd);
