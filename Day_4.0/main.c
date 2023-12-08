@@ -37,6 +37,8 @@ int main(void)
 					win_nums[win_i] = ft_atoi(line + len);
 					if (win_nums[win_i] > 9)
 						lenfix = 1;
+					if (win_nums[win_i] > 99)
+						lenfix = 2;
 					++win_i;
 				}
 				if (line[len] == '|')
@@ -49,9 +51,14 @@ int main(void)
 					++num_i;
 				}
 			}
-			if (lenfix)
+			if (lenfix == 1)
 			{
 				++len;
+				lenfix = 0;
+			}
+			else if (lenfix == 2)
+			{
+				len += 2;
 				lenfix = 0;
 			}
 			++len;
