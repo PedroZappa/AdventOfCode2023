@@ -2,20 +2,26 @@
 # # User defined Commands (alias)
 # #
 define main
+	display /d i
+	display /d n
 	display fd
 	display line
-end
-
-define parse_line
 	display /d len
 	display /d EOL
 	display /d win_i
 	display /d num_i
 	display /d win_nums
+	display /d win_nums[i]
 	display /d nums
+	display /d nums[n]
 	display /d line[len]
+	display /d card_points
+	display /d total_points
 end
 
+define rfr
+	refresh
+end
 
 define vgdb
 	target remote | vgdb
@@ -39,7 +45,8 @@ set logging overwrite
 # #
 # # Startup commands
 # #
-break parse_line
+break 75
 fs cmd
-start
+run
+main
 
