@@ -1,41 +1,27 @@
-NAME		= libday1.a
+NAME		= libft.a
 
-LIBFT_PATH	= libft
-LIBFT		= $(LIBFT_PATH)/libft.a
+LIBFT_PATH	= ../libft
 
-SRC = main.c
+CC		= cc
+CFLAGS	= -Wall -Wextra -Werror
+RM		= rm -f
+INCS	= -I .
 
-OBJS = $(SRC:.c=.o)
+all : $(NAME)
 
-MAKE		= make -C
-CFLAGS		= -Wall -Wextra -Werror -g
-INC			= -I .
-CC			= cc
-RM			= rm -f
-AR			= ar rcs
+$(NAME) :
+	make -C $(LIBFT_PATH) extra
+	cp $(LIBFT_PATH)/libft.a $(NAME)
+	$(CC) $(CFLAGS) $(INCS) main.c $(NAME) -o a.out
 
-all: $(NAME)
+clean :
+	$(RM)
+	make -C $(LIBFT_PATH) clean
 
-.o:.c
-	@echo "\nCompiling $<"
-	$(CC) $(CFLAGS) $(INC) -c $<
+fclean : clean
+	make -C $(LIBFT_PATH) fclean
+	$(RM) $(NAME)
 
-$(NAME): $(OBJS)
-	@echo "\nCompiling libft..."
-	$(MAKE) ../$(LIBFT_PATH) extra
-	cp $(LIBFT) Day_1.0/$(NAME)
-	@echo "\nBuilding archive..."
-	$(AR) $(NAME) $(OBJS)
-	@echo "\n\tSUCCESS!"
+re : fclean all
 
-clean: 
-	$(MAKE) ../$(LIBFT_PATH) clean
-	Day_1.0/$(RM) $(OBJS)
-
-fclean: clean
-	$(MAKE) ../$(LIBFT_PATH) fclean
-	Day_1.0/$(RM) $(NAME)
-
-re: fclean all	
-
-.PHONY: all clean fclean re
+.PHONY : all clean fclean re
