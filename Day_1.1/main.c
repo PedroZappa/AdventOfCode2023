@@ -1,7 +1,7 @@
 #include "day1.h"
 
 t_calib_val		get_calib_val(char *line);
-int				getnum(char *line, t_calib_val *calib_val);
+int				getnum(char *line, t_calib_val *calib_val, int *got_first);
 int				is_strnum(char *line);
 int				getskip(char *line);
 int				numstrlen(int num);
@@ -36,7 +36,6 @@ int		main(void)
 		perror("open() failed");
 		return 1;
 	}
-
 	// Extract Values
 	i = 0;
 	read_vals = NULL;
@@ -55,7 +54,6 @@ int		main(void)
 		++i;
 	}
 	close(fd);
-
 	// Sum values
 	sum = 0;
 	i = -1;
@@ -68,48 +66,56 @@ int		main(void)
 	return 0;
 }
 
+
 /* Extract Calibration Values 
  * */
 t_calib_val		get_calib_val(char *line)
 {
 	t_calib_val	*calib_val;
+	int			got_first;
 
 	calib_val = malloc(sizeof(t_calib_val));
 	calib_val->first_dig = -1;
 	calib_val->last_dig = -1;
 	calib_val->calib_val = 0;
+	got_first = 0;
 	while (*line) 
 	{
 		if (*line >= '0' && *line <= '9')
 		{
 			if (calib_val->first_dig == -1)
+			{
 				calib_val->first_dig = *line - '0';
+				got_first = 1;
+			}
 			calib_val->last_dig = *line - '0';
 			++line;
 		}
 		else if ((*line >= 'a' && *line <= 'z') || (*line >= 'A' && *line <= 'Z'))
-			line += getnum(line, calib_val);	
+			line += getnum(line, calib_val, &got_first);	
+		else if (*line == '\n')
+		{
+			++line;
+			break ;
+		}
 	}
 	calib_val->calib_val = (calib_val->first_dig * 10) + calib_val->last_dig;
 	return (*calib_val);
 }
 
-int	getnum(char *line, t_calib_val *calib_val)
+int	getnum(char *line, t_calib_val *calib_val, int *got_first)
 {
-	int			got_first;
 	int			got_last;
 
-	got_first = 0;
 	got_last = 0;
-
-	if (got_first == 0)
+	if (*got_first == 0)
 	{
 		calib_val->first_dig = is_strnum(line);
 		if (calib_val->first_dig == 0)
 			return (getskip(line));	
 		else
 		{
-			got_first = 1;
+			*got_first = 1;
 			return (numstrlen(calib_val->first_dig));
 		}
 	}
@@ -117,11 +123,11 @@ int	getnum(char *line, t_calib_val *calib_val)
 	{
 		calib_val->last_dig = is_strnum(line);
 		if (calib_val->last_dig == 0)
-			line += getskip(line);
+				return (getskip(line));
 		else
 		{
 			got_last = 1;
-			line += numstrlen(calib_val->last_dig);
+			return (numstrlen(calib_val->last_dig));
 		}
 	}
 	else
@@ -164,6 +170,7 @@ int	getskip(char *line)
 	int		num;
 	int		i;
 	int		skip;
+	int		return_skip;
 	char	*numstr[] = {	
 		"", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" 
 	};
@@ -171,6 +178,7 @@ int	getskip(char *line)
 	 * next digit or spelled out digit */
 	i = 1;
 	skip = 0;
+	return_skip = 0;
 	slen = strlen(numstr[i]);
 	n_strs = sizeof(numstr) / sizeof(numstr[0]);
 	while (i < n_strs)
@@ -184,11 +192,13 @@ int	getskip(char *line)
 			++line;
 		}
 		line -= skip;
+		return_skip = skip;
 		skip = 0;
 		++i;
-		slen = strlen(numstr[i]);
+		if (i < 10)
+			slen = strlen(numstr[i]);
 	}
-	return (0);
+	return (return_skip);
 }
 
 int		numstrlen(int num)
