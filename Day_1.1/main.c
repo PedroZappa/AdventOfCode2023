@@ -1,7 +1,8 @@
 #include "day1.h"
+#include <ctype.h>
 
 t_calib_val		get_calib_val(char *line);
-int				getnum(char *line, t_calib_val *calib_val, int *got_first);
+int				getnum(char *line, t_calib_val *calib_val, int *got_first, int *got_last);
 int				is_strnum(char *line);
 int				getskip(char *line);
 int				numstrlen(int num);
@@ -49,6 +50,7 @@ int		main(void)
 			return 1;
 		*read_vals = get_calib_val(line);
 		vals_list[i] = read_vals->calib_val;
+		printf("Calibration value %d: %d\n", (i+1), read_vals->calib_val);
 		free(read_vals);
 		free(line);
 		++i;
@@ -73,6 +75,7 @@ t_calib_val		get_calib_val(char *line)
 {
 	t_calib_val	*calib_val;
 	int			got_first;
+	int			got_last;
 
 	calib_val = malloc(sizeof(t_calib_val));
 	calib_val->first_dig = -1;
@@ -81,6 +84,7 @@ t_calib_val		get_calib_val(char *line)
 	got_first = 0;
 	while (*line) 
 	{
+		got_last = 0;
 		if (*line >= '0' && *line <= '9')
 		{
 			if (calib_val->first_dig == -1)
@@ -92,7 +96,7 @@ t_calib_val		get_calib_val(char *line)
 			++line;
 		}
 		else if ((*line >= 'a' && *line <= 'z') || (*line >= 'A' && *line <= 'Z'))
-			line += getnum(line, calib_val, &got_first);	
+			line += getnum(line, calib_val, &got_first, &got_last);	
 		else if (*line == '\n')
 		{
 			++line;
@@ -103,11 +107,8 @@ t_calib_val		get_calib_val(char *line)
 	return (*calib_val);
 }
 
-int	getnum(char *line, t_calib_val *calib_val, int *got_first)
+int	getnum(char *line, t_calib_val *calib_val, int *got_first, int *got_last)
 {
-	int			got_last;
-
-	got_last = 0;
 	if (*got_first == 0)
 	{
 		calib_val->first_dig = is_strnum(line);
@@ -119,14 +120,15 @@ int	getnum(char *line, t_calib_val *calib_val, int *got_first)
 			return (numstrlen(calib_val->first_dig));
 		}
 	}
-	else if (got_last == 0)
+	else if (*got_last == 0)
 	{
-		calib_val->last_dig = is_strnum(line);
-		if (calib_val->last_dig == 0)
+		if (!is_strnum(line) == 0)
+			calib_val->last_dig = is_strnum(line);
+		if (calib_val->last_dig <= 0)
 				return (getskip(line));
 		else
 		{
-			got_last = 1;
+			*got_last = 1;
 			return (numstrlen(calib_val->last_dig));
 		}
 	}
@@ -183,10 +185,12 @@ int	getskip(char *line)
 	n_strs = sizeof(numstr) / sizeof(numstr[0]);
 	while (i < n_strs)
 	{
-		while (*line)
+		while (*line && isalpha(*line))
 		{
 			if ((num = strncmp(line, numstr[i], slen)) != 0)
 				++skip;
+			else if ((num = strncmp(line, numstr[i], slen)) == 0)
+				num = i;
 			if (num == 0)
 				return (skip);
 			++line;

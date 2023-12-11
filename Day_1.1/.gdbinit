@@ -24,7 +24,7 @@ define getnum
 	display /d calib_val->first_dig
 	display /d calib_val->last_dig
 	display /d *got_first
-	display /d got_last
+	display /d *got_last
 end
 
 define strnum
