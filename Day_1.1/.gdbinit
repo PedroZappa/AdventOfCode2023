@@ -44,6 +44,7 @@ define getskip
 	display /d slen
 	display /d num
 	display /d i
+	display /d j
 	display /d skip
 end
 

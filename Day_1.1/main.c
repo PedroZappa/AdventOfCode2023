@@ -4,7 +4,7 @@
 t_calib_val		get_calib_val(char *line);
 int				getnum(char *line, t_calib_val *calib_val, int *got_first, int *got_last);
 int				is_strnum(char *line);
-int				getskip(char *line);
+int				getskip(char *line, t_calib_val *calib_val, int *got_first);
 int				numstrlen(int num);
 int				strtoi(char *str);
 
@@ -113,7 +113,7 @@ int	getnum(char *line, t_calib_val *calib_val, int *got_first, int *got_last)
 	{
 		calib_val->first_dig = is_strnum(line);
 		if (calib_val->first_dig == 0)
-			return (getskip(line));	
+			return (getskip(line, calib_val, got_first));	
 		else
 		{
 			*got_first = 1;
@@ -122,10 +122,13 @@ int	getnum(char *line, t_calib_val *calib_val, int *got_first, int *got_last)
 	}
 	else if (*got_last == 0)
 	{
-		if (!is_strnum(line) == 0)
+		if (is_strnum(line) > 0)
 			calib_val->last_dig = is_strnum(line);
 		if (calib_val->last_dig <= 0)
-				return (getskip(line));
+		{
+			calib_val->last_dig = is_strnum(line);
+			return (getskip(line, calib_val, got_first));
+		}
 		else
 		{
 			*got_last = 1;
@@ -133,7 +136,7 @@ int	getnum(char *line, t_calib_val *calib_val, int *got_first, int *got_last)
 		}
 	}
 	else
-		++line;
+	++line;
 	if (*line == '\n')
 		++line;
 	return (0);
@@ -165,39 +168,50 @@ int	is_strnum(char *line)
 	return (0);
 }
 
-int	getskip(char *line)
+/* If no spelled out digit was found get length of chars before 
+* next digit or spelled out digit 
+* */
+int	getskip(char *line, t_calib_val *calib_val, int *got_first)
 {
 	int		n_strs;
 	int		slen;
 	int		num;
 	int		i;
+	int		j;
 	int		skip;
 	int		return_skip;
 	char	*numstr[] = {	
 		"", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" 
 	};
-	/* If no spelled out digit was found get lenght of chars before 
-	 * next digit or spelled out digit */
 	i = 1;
+	j = 0;
 	skip = 0;
 	return_skip = 0;
 	slen = strlen(numstr[i]);
 	n_strs = sizeof(numstr) / sizeof(numstr[0]);
 	while (i < n_strs)
 	{
-		while (*line && isalpha(*line))
+		while (*line && isalpha(*line) && (j < slen-1))
 		{
 			if ((num = strncmp(line, numstr[i], slen)) != 0)
-				++skip;
+				++skip;	
 			else if ((num = strncmp(line, numstr[i], slen)) == 0)
-				num = i;
+			{
+				if (!got_first)	
+					calib_val->first_dig = strtoi(numstr[i]);
+				else
+					calib_val->last_dig = strtoi(numstr[i]);
+				return (slen + i);
+			}
 			if (num == 0)
 				return (skip);
 			++line;
+			++j;
 		}
 		line -= skip;
 		return_skip = skip;
 		skip = 0;
+		j = 0;
 		++i;
 		if (i < 10)
 			slen = strlen(numstr[i]);
