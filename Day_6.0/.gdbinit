@@ -18,6 +18,7 @@ define get_distance
 	display local_line
 	display /d time
 	display /d fixlen
+	display /d distance
 end
 
 define get_n_ways
@@ -43,7 +44,9 @@ fs cmd
 # run
 # get_time
 
-break 56
+# debug get_distance
+break 38
 run
+main
 step
-get_n_ways
+get_distance

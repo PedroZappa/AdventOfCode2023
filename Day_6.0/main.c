@@ -124,10 +124,12 @@ int	get_distance(char *line)
 		if (isdigit(*local_line))
 		{
 			distance = atoi(local_line);
-			if (distance > 9)
-				fixlen = 1;
+			if (distance > 999)
+				fixlen = 3;
 			else if (distance > 99)
 				fixlen = 2;
+			else if (distance > 9)
+				fixlen = 1;
 			local_line += fixlen;
 		}
 		++local_line;
