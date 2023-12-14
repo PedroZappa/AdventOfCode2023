@@ -1,4 +1,5 @@
 #include "day6.h"
+#include <ctype.h>
 
 void	get_time(char *line, int **time);
 void	get_distance(char *line, int **distance);
@@ -52,8 +53,22 @@ int		main(void)
  * */
 void	get_time(char *line, int **time)
 {
-	(void)line;
-	(void)time;
+	int		fixlen;
+
+	while (*line)
+	{
+		if (isdigit(*line))
+		{
+			**time = atoi(line);
+			if (**time > 9)
+				fixlen = 1;
+			else if (**time > 99)
+				fixlen = 2;
+			line += fixlen;
+		}
+		++line;
+
+	}
 }
 
 /* Get distance from second line
