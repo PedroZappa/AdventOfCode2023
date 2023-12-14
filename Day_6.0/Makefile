@@ -15,7 +15,7 @@ INCS	= -I .
 
 .PHONY: help
 help: 			## Show help
-	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[35m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[35m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' Makefile
+	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make $(GRN)<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  $(GRN)%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s$(GRN)\n", substr($$0, 5) } ' Makefile
 
 ##@ Compilation Rules 🏗
 
