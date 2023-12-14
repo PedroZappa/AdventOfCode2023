@@ -6,7 +6,7 @@ define main
 	display /d fd
 end
 
-define get_num
+define get_time
 	display line
 	display local_line
 	display /d time
@@ -15,6 +15,18 @@ end
 
 define get_distance
 	display line
+	display local_line
+	display /d time
+	display /d fixlen
+end
+
+define get_n_ways
+	display /d time
+	display /d record_dist
+	display /d n_ways
+	display /d press_time
+	display /d travel_time
+	display /d travel_dist
 end
 
 
@@ -31,8 +43,7 @@ fs cmd
 # run
 # get_time
 
-break 37
+break 56
 run
-main
 step
-get_num
+get_n_ways
