@@ -3,7 +3,7 @@
 
 # include <stdio.h>
 # include <fcntl.h>			// open()
-# include "../libft/libft.h"
+# include "../libft/libft/libft.h"
 
 typedef struct s_calib_val
 {
