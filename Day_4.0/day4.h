@@ -6,7 +6,7 @@
 # include <stdlib.h>
 # include <fcntl.h>			// open()
 # include <string.h>			// strstr()
-# include "../libft/libft.h"
+# include "../libft/libft/libft.h"
 
 # define SEP		"<====|===|===|===|====>\n"
 # define SEPLONG	"<====|===|===|===|===|===|===|===|===|====>\n"
