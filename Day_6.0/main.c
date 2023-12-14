@@ -1,15 +1,17 @@
 #include "day6.h"
 #include <ctype.h>
 
-void	get_time(char *line, int **time);
-void	get_distance(char *line, int **distance);
+int		get_time(char *line);
+int		get_distance(char *line);
 
 int		main(void)
 {
-	char	*line;
-	int		*time;
-	int		*distance;
+	char	*time;
+	// char	*distance;
+	int		time_num[3]		= { 0 };
+	// int		distance_num[3] = { 0 };
 	int		fd;
+	int		i;
 
 	printf("Day 6.0\n");
 	printf(SEPLNG);
@@ -19,31 +21,24 @@ int		main(void)
 		return (1);
 
 	/* Read time and distance from file */
-	time = NULL;
-	distance = NULL;
-	while ((line = get_next_line(fd)) != NULL)
+	time = get_next_line(fd);
+	i = 0;
+	while (i < 3)
 	{
-		printf("%s\n", line);
-		if (!time)
-			get_time(line, &time);
-		else
-			get_distance(line, &distance);
-		free(line);
+		time_num[i] = get_time(time);
+		++i;
 	}
+	free(time);
+
+
 	close(fd);
 	
 	/* Print parsed data */
 	printf(SEP);
-	if (time)
-	{
-		printf("Time: %d\n", *time);
-		free(time);
-	}
-	if (distance)
-	{
-		printf("Distance: %d\n", *distance);
-		free(distance);
-	}
+	printf("Time: ");
+	for (i = 0; i < 3; ++i)
+		printf("%d ", time_num[i]);
+	printf("\n");
 
 	printf(SEPLNG);
 	return (0);	
@@ -51,30 +46,39 @@ int		main(void)
 
 /* Get time from first line
  * */
-void	get_time(char *line, int **time)
+int	get_time(char *line)
 {
-	int		fixlen;
+	static char	*local_line;
+	static int	fixlen;
+	int			time;
 
-	while (*line)
+	if (!local_line)
+		local_line = line;
+	fixlen = 0;
+	time = 0;
+	while (local_line)
 	{
-		if (isdigit(*line))
+		if (isdigit(*local_line))
 		{
-			**time = atoi(line);
-			if (**time > 9)
+			time = atoi(local_line);
+			if (time > 9)
 				fixlen = 1;
-			else if (**time > 99)
+			else if (time > 99)
 				fixlen = 2;
-			line += fixlen;
+			local_line += fixlen;
 		}
-		++line;
-
+		++local_line;
+		if (time != 0)
+			return (time);
 	}
+	return (0);
 }
 
 /* Get distance from second line
  * */
-void	get_distance(char *line, int **distance)
+int	get_distance(char *line)
 {
 	(void)line;
-	(void)distance;
+
+	return (0);
 }
