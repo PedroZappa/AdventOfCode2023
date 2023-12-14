@@ -7,9 +7,9 @@ int		get_distance(char *line);
 int		main(void)
 {
 	char	*time;
-	// char	*distance;
+	char	*distance;
 	int		time_num[3]		= { 0 };
-	// int		distance_num[3] = { 0 };
+	int		distance_num[3] = { 0 };
 	int		fd;
 	int		i;
 
@@ -20,7 +20,7 @@ int		main(void)
 	if (fd == -1)
 		return (1);
 
-	/* Read time and distance from file */
+	/* Read time from file */
 	time = get_next_line(fd);
 	i = 0;
 	while (i < 3)
@@ -30,6 +30,15 @@ int		main(void)
 	}
 	free(time);
 
+	/* Read distance from file */
+	distance = get_next_line(fd);
+	i = 0;
+	while (i < 3)
+	{
+		distance_num[i] = get_distance(distance);
+		++i;
+	}
+	free(distance);
 
 	close(fd);
 	
@@ -38,6 +47,10 @@ int		main(void)
 	printf("Time: ");
 	for (i = 0; i < 3; ++i)
 		printf("%d ", time_num[i]);
+	printf("\n");
+	printf("Distance: ");
+	for (i = 0; i < 3; ++i)
+		printf("%d ", distance_num[i]);
 	printf("\n");
 
 	printf(SEPLNG);
@@ -49,7 +62,7 @@ int		main(void)
 int	get_time(char *line)
 {
 	static char	*local_line;
-	static int	fixlen;
+	int			fixlen;
 	int			time;
 
 	if (!local_line)
@@ -78,7 +91,29 @@ int	get_time(char *line)
  * */
 int	get_distance(char *line)
 {
-	(void)line;
+	static char	*local_line;
+	int			fixlen;
+	int			distance;
+
+	if (!local_line)
+		local_line = line;
+	fixlen = 0;
+	distance = 0;
+	while (local_line)
+	{
+		if (isdigit(*local_line))
+		{
+			distance = atoi(local_line);
+			if (distance > 9)
+				fixlen = 1;
+			else if (distance > 99)
+				fixlen = 2;
+			local_line += fixlen;
+		}
+		++local_line;
+		if (distance != 0)
+			return (distance);
+	}
 
 	return (0);
 }

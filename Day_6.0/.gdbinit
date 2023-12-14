@@ -1,11 +1,12 @@
 define main
 	display time
 	display /d time_num
-	display /d distance
+	display /d distance_num
+	display distance
 	display /d fd
 end
 
-define get_time
+define get_num
 	display line
 	display local_line
 	display /d time
@@ -22,14 +23,16 @@ set logging on
 set trace-commands on
 fs cmd
 
-break main
-run
-main
+# break main
+# run
+# main
 
 # break get_time
 # run
 # get_time
 
-# break get_distance
-# run
-# get_distance
+break 37
+run
+main
+step
+get_num
