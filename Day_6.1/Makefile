@@ -1,6 +1,4 @@
-# Day_6.0/Makefile
-
-### Libft ###
+### Names & Paths ###
 LIBFT		= libft.a
 LIBFT_PATH	= ../libft
 EXEC		= a.out
@@ -11,11 +9,12 @@ CFLAGS	= -Wall -Wextra -Werror
 RM		= rm -f
 INCS	= -I .
 
+
 ##@ General
 
 .PHONY: help
 help: 			## Show help
-	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make $(GRN)<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  $(GRN)%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s$(GRN)\n", substr($$0, 5) } ' Makefile
+	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make $(GRN)<target>$(NC)\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  $(GRN)%-15s$(NC) %s\n", $$1, $$2 } /^##@/ { printf "\n$(NC)%s$(GRN)\n", substr($$0, 5) } ' Makefile
 
 ##@ Compilation Rules 🏗
 
