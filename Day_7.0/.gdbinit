@@ -28,6 +28,8 @@ define parse_line
 end
 
 define get_hand
+	display line
+	display line[i]
 	display hand
 	display hand[i]
 	display /d i

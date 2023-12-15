@@ -1,16 +1,17 @@
 #include "day7.h"
 
 #define N_HANDS		1000
-#define HAND_LEN	5
+#define HAND_LEN	6
 #define BID_IDX		6
 
-void	parse_line(char *line, char *hand, int *bid);
+char	*parse_line(char *line, int *bid);
 char	*get_hand(char *line);
 
 int		main(void)
 {
 	char	*line;
-	char	hands[N_HANDS]		= { 0 };
+	char	*hand;
+	char	*hands[N_HANDS]		= { 0 };
 	int		bids[N_HANDS]		= { 0 };
 	int		winnings[N_HANDS]	= { 0 };
 	int		fd;
@@ -28,15 +29,18 @@ int		main(void)
 	}
 	/* Read File & Parse Data */
 	i = 0;
+	hand = NULL;
 	while ((line = get_next_line(fd)) != NULL)
 	{
-		parse_line(line, &hands[i], &bids[i]);
+		hand = parse_line(line, &bids[i]);
+		hands[i] = hand;
 		++i;
 	}
+	close(fd);
 	/* Print Results */
 	i = -1;
-	while ((++i < N_HANDS) && (hands[i] != 0))
-		printf("Hand: %c - Bid: %d\n", hands[i], bids[i]);
+	while ((++i < N_HANDS) && (bids[i] != 0))
+		printf("Hand: %s\tBid: %d\n", hands[i], bids[i]);
 
 	/* Sort Hands by Strength */
 	
@@ -44,17 +48,24 @@ int		main(void)
 	/* Calculate Winnings */
 	(void)winnings;
 
-	close(fd);
+	
+	/* Free hands */
+
 	printf(SEPLNG);
 	return (0);
 }
 
 /* Parse Hand and Bid from each line
  * */
-void	parse_line(char *line, char *hand, int *bid)
+char	*parse_line(char *line, int *bid)
 {
-	*hand = *get_hand(line);
+	char	*hand;
+
+	hand = get_hand(line);
+	printf(YEL"parse_line(): Hand: %s\n"CRESET, hand);
 	*bid = atoi(line + BID_IDX);
+
+	return (hand);
 }
 
 char		*get_hand(char *line)
@@ -66,7 +77,7 @@ char		*get_hand(char *line)
 	if (!hand)
 		return (NULL);
 	i = 0;
-	while (line[i] && (i < HAND_LEN))
+	while (line[i] && (i < HAND_LEN-1))
 	{
 		hand[i] = line[i];
 		++i;
