@@ -1,11 +1,13 @@
 #include "day7.h"
 
-#define N_HANDS		1000
+#define N_HANDS		5000
 #define HAND_LEN	6
 #define BID_IDX		6
 
 char	*parse_line(char *line, int *bid);
 char	*get_hand(char *line);
+void	bubble_sort(char **hands, int n);	
+void	swap(char *a, char *b);
 
 int		main(void)
 {
@@ -43,7 +45,7 @@ int		main(void)
 		printf("Hand: %s\tBid: %d\n", hands[i], bids[i]);
 
 	/* Sort Hands by Strength */
-	
+	bubble_sort((char **)hands, N_HANDS);	
 
 	/* Calculate Winnings */
 	(void)winnings;
@@ -62,13 +64,14 @@ char	*parse_line(char *line, int *bid)
 	char	*hand;
 
 	hand = get_hand(line);
-	printf(YEL"parse_line(): Hand: %s\n"CRESET, hand);
 	*bid = atoi(line + BID_IDX);
 
 	return (hand);
 }
 
-char		*get_hand(char *line)
+/* Get Hand from line
+* */
+char	*get_hand(char *line)
 {
 	char	*hand;
 	int		i;
@@ -86,3 +89,40 @@ char		*get_hand(char *line)
 	return (hand);
 }
 
+void	bubble_sort(char **arr, int n)
+{
+	int		i;
+	int		j;
+	int		swapped;
+
+	i = 0;
+	swapped = 0;
+	while (i < n)
+	{
+		j = 0;
+		swapped = 0;
+		while (j < (HAND_LEN - 1))
+		{
+			if (arr[i][j] > arr[i][j + 1])
+			{
+				swap(arr[i], arr[i]);
+				swapped = 1;
+			}
+			++j;
+		}
+		if (!swapped)
+			break;
+		++i;
+	}
+}
+
+/* Swap two values
+ * */
+void	swap(char *a, char *b)
+{
+	char	*tmp;
+
+	tmp = a;
+	a = b;
+	b = tmp;
+}
