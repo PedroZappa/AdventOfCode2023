@@ -1,5 +1,12 @@
 define main
+	display /d hands
+	display /d bids
+	display /d winnings
+	display /d fd
+end
 
+define parse
+	display /d i
 end
 
 
