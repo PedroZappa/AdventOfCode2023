@@ -35,26 +35,33 @@ define get_hand
 	display /d i
 end
 
-define bubble_sort
+define sort
 	display arr
 	display *arr
-	display /d arr[i][j]
-	display /d arr[i+1][j]
+	display *arr[0]
+	display **arr
+	display arr[i][j]
+	display arr[i][j+1]
+	display arr[i+1][j]
 	display /d n
 	display /d i
 	display /d j
-	display /d swapped
+	display /d check_card
 end
 
-define swap
-
+define compare_cards
+	display hand_a
+	display hand_b
+	display /d card_a
+	display /d card_b
+	display /d card_pow[n]
+	display /d i
+	display /d a_value
+	display /d b_value
+	display /d n
 end
 
 
-### Debugger Startup ###
-set logging enabled on
-set trace-commands on
-fs cmd
 
 # Start on top o'main
 # start
@@ -70,8 +77,21 @@ fs cmd
 # get_hand
 
 #Start at bubble_sort
-break 51
+# break 48
+# run
+# main
+# step
+# sort
+
+# Start sort
+break 114
 run
-main
-step
-bubble_sort
+sort
+refresh
+
+
+### Options ###
+set logging enabled
+set trace-commands
+set print array
+set print pretty
