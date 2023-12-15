@@ -22,12 +22,12 @@ help: 			## Show help
 all: $(LIBFT)	## Compile executable with libft
 
 $(LIBFT):
-	@echo "\t$(YEL)Compiling libft$(NC)"
+	@echo "\t$(YEL)Compiling libft 🏗$(NC)"
 	make -C $(LIBFT_PATH) extra
 	cp $(LIBFT_PATH)/libft.a $(LIBFT)
-	@echo "\t$(YEL)Compiling executable$(NC)"
+	@echo "\t$(YEL)Compiling executable 🏗$(NC)"
 	$(CC) $(CFLAGS) $(INCS) main.c $(LIBFT) -o $(EXEC)
-	@echo "\t$(GRN)Done!$(NC)"
+	@echo "\t$(GRN)Done! 🖔$(NC)"
 
 ##@ Clean-up Rules 󰃢
 
