@@ -1,8 +1,10 @@
 #include "day7.h"
 
 #define N_HANDS		1000
+#define HAND_LEN	5
+#define BID_IDX		6
 
-void	parse_line(char *line, char *hand, int *bids);
+void	parse_line(char *line, char *hand, int *bid);
 char	*get_hand(char *line);
 
 int		main(void)
@@ -49,14 +51,27 @@ int		main(void)
 
 /* Parse Hand and Bid from each line
  * */
-void	parse_line(char *line, char *hand, int *bids)
+void	parse_line(char *line, char *hand, int *bid)
 {
 	*hand = *get_hand(line);
-	*bids = atoi(line + 6);
+	*bid = atoi(line + BID_IDX);
 }
 
 char		*get_hand(char *line)
 {
-	return (line);
+	char	*hand;
+	int		i;
+
+	hand = malloc(sizeof(char) * HAND_LEN);
+	if (!hand)
+		return (NULL);
+	i = 0;
+	while (line[i] && (i < HAND_LEN))
+	{
+		hand[i] = line[i];
+		++i;
+	}
+	hand[i] = '\0';
+	return (hand);
 }
 
