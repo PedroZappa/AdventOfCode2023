@@ -35,6 +35,21 @@ define get_hand
 	display /d i
 end
 
+define bubble_sort
+	display arr
+	display *arr
+	display /s arr[i][j]
+	display /s arr[i+1][j]
+	display /d n
+	display /d i
+	display /d j
+	display /d swapped
+end
+
+define swap
+
+end
+
 
 ### Debugger Startup ###
 set logging enabled on
@@ -46,10 +61,17 @@ fs cmd
 # main
 
 # Start at get_hand
-break 33
+# break 33
+# run
+# main
+# step
+# parse_line
+# step
+# get_hand
+
+#Start at bubble_sort
+break 49
 run
 main
 step
-parse_line
-step
-get_hand
+bubble_sort

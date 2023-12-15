@@ -41,16 +41,20 @@ int		main(void)
 	close(fd);
 	/* Print Results */
 	i = -1;
+	printf(URED"Hands before sorting:\n\n"CRESET);
 	while ((++i < N_HANDS) && (bids[i] != 0))
-		printf("Hand: %s\tBid: %d\n", hands[i], bids[i]);
+		printf("\tHand: %s\tBid: %d\n", hands[i], bids[i]);
+	printf("\n");
 
-	printf(YEL SEP CRESET);
+	printf(YEL SEPLNG "\n" CRESET);
 	/* Sort Hands by Strength */
 	bubble_sort((char **)hands, N_HANDS);	
 	/* Print sorted hands */
 	i = -1;
+	printf(UGRN"Hands after sorting:\n\n"CRESET);
 	while ((++i < N_HANDS) && (bids[i] != 0))
-		printf("Hand: %s\tBid: %d\n", hands[i], bids[i]);
+		printf("\tHand: %s\tBid: %d\n", hands[i], bids[i]);
+	printf("\n");
 
 
 	/* Calculate Winnings */
@@ -113,6 +117,8 @@ void	bubble_sort(char **arr, int n)
 			{
 				swap(arr[i], arr[i + 1]);
 				swapped = 1;
+				break;
+
 			}
 			++j;
 		}
