@@ -5,12 +5,16 @@ define main
 	display /d fd
 end
 
-define parse
+define parse_line
+	display line
+	display hands
+	display bids
+	display /d bids
 	display /d i
 end
 
 
-### Debugger Startup Commands ###
+### Debugger Startup ###
 set logging on
 set trace-commands on
 fs cmd

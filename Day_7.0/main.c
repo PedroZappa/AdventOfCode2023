@@ -2,8 +2,8 @@
 
 #define N_HANDS		1000
 
-void	parse_line(char *line, char *hands, int *bids, int i);
-char		*get_hand(char *line);
+void	parse_line(char *line, char *hand, int *bids);
+char	*get_hand(char *line);
 
 int		main(void)
 {
@@ -25,9 +25,12 @@ int		main(void)
 		return (1);
 	}
 	/* Read File & Parse Data */
-	i = -1;
+	i = 0;
 	while ((line = get_next_line(fd)) != NULL)
-		parse_line(line, hands, bids, ++i);
+	{
+		parse_line(line, &hands[i], &bids[i]);
+		++i;
+	}
 	/* Print Results */
 	i = -1;
 	while ((++i < N_HANDS) && (hands[i] != 0))
@@ -46,11 +49,10 @@ int		main(void)
 
 /* Parse Hand and Bid from each line
  * */
-void	parse_line(char *line, char *hands, int *bids, int i)
+void	parse_line(char *line, char *hand, int *bids)
 {
-
-	hands[i]	= *get_hand(line);
-	bids[i]		= atoi(line+6);
+	*hand = *get_hand(line);
+	*bids = atoi(line + 6);
 }
 
 char		*get_hand(char *line)
