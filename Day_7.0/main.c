@@ -195,17 +195,22 @@ int		*get_types(char **line)
 			if ((two == 5) || (three == 5) || (four == 5) || (five == 5) || 
 				(six == 5) || (seven == 5) || (eight == 5) || (nine == 5) || 
 				(t == 5) || (j == 5) || (q == 5) || (k == 5) || (a == 5))
-			{
 				types[i] = FIVE_OA_KIND;
-			}
 			else if ((two == 4) || (three == 4) || (four == 4) || (five == 4) ||
 					(six == 4) || (seven == 4) || (eight == 4) || (nine == 4) ||
 					(t == 4) || (j == 4) || (q == 4) || (k == 4) || (a == 4))
-			{
 				types[i] = FOUR_OA_KIND;
-			}
-			++n;
+			else if ((two == 3) || (three == 3) || (four == 3) || (five == 3) ||
+					(six == 3) || (seven == 3) || (eight == 3) || (nine == 3) ||
+					(t == 3) || (j == 3) || (q == 3) || (k == 3) || (a == 3))
+				types[i] = THREE_OA_KIND;
+			else if ((two == 2) || (three == 2) || (four == 2) || (five == 2) ||
+					(six == 2) || (seven == 2) || (eight == 2) || (nine == 2) ||
+					(t == 2) || (j == 2) || (q == 2) || (k == 2) || (a == 2))
+				types[i] = TWO_PAIR;
+				else
 
+			++n;
 		}
 		printf("%s\n", line[i]);
 		++i;
