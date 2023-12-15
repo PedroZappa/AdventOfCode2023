@@ -38,8 +38,8 @@ end
 define bubble_sort
 	display arr
 	display *arr
-	display /s arr[i][j]
-	display /s arr[i+1][j]
+	display /d arr[i][j]
+	display /d arr[i+1][j]
 	display /d n
 	display /d i
 	display /d j
@@ -70,7 +70,7 @@ fs cmd
 # get_hand
 
 #Start at bubble_sort
-break 49
+break 51
 run
 main
 step
